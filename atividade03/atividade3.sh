@@ -3,14 +3,14 @@
 exercicio=$1
 aluno=$2
 
-#Concatenando para obeter o script
-script=$(echo $exercicio'_'$aluno'.sh')
+#Concatenando para obter o script
+script=$(echo 'EXERCICIO_'$exercicio'_'$aluno'.sh')
 
 #Alterando as permissoes para poder executar o script
 chmod +x $script
 
-entrada=$exercicio'.in'
-saida=$exercicio'.out'
+entrada='EXERCICIO_'$exercicio'.in'
+saida='EXERCICIO_'$exercicio'.out'
 
 ./$script <  $entrada > result
 
@@ -18,7 +18,7 @@ saida=$exercicio'.out'
 diff result $saida > dif
 
 
-echo "$exercicio'_X_'$aluno:"
+echo "'EXERCICIO_'$exercicio'_'$aluno:"
 
 echo "-SAIDA PARA A ENTRADA X:"
 cat result
