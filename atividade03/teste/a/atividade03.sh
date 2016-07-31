@@ -10,8 +10,6 @@ ls >  arquivos
 
 #removendo o meu script dentre os arquivos
 sed -i '/atividade03.sh/d' arquivos
-sed -i '/scr/d' arquivos
-
 
 
 #caso receba dois ou menos parametros
@@ -36,8 +34,7 @@ while read line; do
     chmod +x $line
 
     #quantidade de vezes que sera testado
-    testes=$(grep "EXERCICIO_$exercicio" entradas | wc -l)
-
+    testes=$(cat entradas | wc -l)
     echo $(echo $line | cut -d '.' -f 1):
 
     for exer in $(seq $testes); do

@@ -37,7 +37,8 @@ while read line; do
 
     #quantidade de vezes que sera testado
     testes=$(grep "EXERCICIO_$exercicio" entradas | wc -l)
-
+    
+    #script a ser testado
     echo $(echo $line | cut -d '.' -f 1):
 
     for exer in $(seq $testes); do
@@ -46,7 +47,8 @@ while read line; do
         saida='EXERCICIO_'$exercicio'_'$exer'.out'
         ./$line <  $entrada > result         
    
- 
+        
+        #Salvando p diff
         diff result $saida > dif
 
         echo "- SAIDA PARA ENTRADA $exer:"
@@ -63,7 +65,7 @@ while read line; do
     done
 done < scripts
 
-
+#Removendo arquivos usados para manipulacao de dados
 rm arquivos
 rm scripts
 rm entradas
