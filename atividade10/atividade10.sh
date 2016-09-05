@@ -13,28 +13,25 @@ while read line; do
     
     hash_value=$(echo $line | cut -d " " -f1)
     algorithm=$(echo $line | cut -d " " -f2)
-    file=$(echo $line | cut -d " " -f3)
-    #Problemas com arquivos de nome compostos 
-    # o [ -e nomeArquivo ] nao reconhece
-    filex=$(echo ${line##*$algorithm })
+    file=$(echo ${line##*$algorithm })
 
-    if [ -e $file ]; then
+    if [ -e "$file" ]; then
             if [ $algorithm == "CRC" ]; then 
-                result=$(cksum $file | sed "s/ $filex//g")
+                result=$(cksum $file | sed "s/ $file//g")
             elif [ $algorithm == "MD5" ]; then
-                result=$(md5sum $file | sed "s/ $filex//g")
+                result=$(md5sum $file | sed "s/ $file//g")
             elif [ $algorithm == "SHA1" ]; then
-                result=$(sha1sum $file | sed "s/ $filex//g")
+                result=$(sha1sum $file | sed "s/ $file//g")
             fi
             
             
             if [ $result == $hash_value ];then 
-                echo "OK $filex"
+                echo "OK $file"
             else 
-                echo "ERROR $filex"
+                echo "ERROR $file"
             fi
     else 
-        echo "NOT_FOUND $filex"
+        echo "NOT_FOUND $file"
     fi
                
 done < $1
