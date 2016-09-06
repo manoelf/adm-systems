@@ -8,6 +8,17 @@
 #=======================================================#
 
 
+#Extra
+#Caso passe um diretorio como parametro
+#ira calcular o CMD de cada arquivo
+if [ -d "$1" ]; then
+    cd $1
+    for arq in $(ls -w1); do
+        if [ -f "$arq" ]; then 
+            echo "$(cksum $arq) [CMD]"
+        fi
+    done
+else
 
 while read line; do
     
@@ -15,7 +26,7 @@ while read line; do
     algorithm=$(echo $line | cut -d " " -f2)
     file=$(echo ${line##*$algorithm })
 
-    if [ -e "$file" ]; then
+    if [ -f "$file" ]; then
             if [ $algorithm == "CRC" ]; then 
                 result=$(cksum $file | sed "s/ $file//g")
             elif [ $algorithm == "MD5" ]; then
@@ -35,6 +46,6 @@ while read line; do
     fi
                
 done < $1
-
+fi
 
 
