@@ -1,30 +1,14 @@
 #!/bin/bash
 
+#=======================================++================#
+# Student: Jose Manoel Ferreira                           #
+# Professor: Matheus G. Rego                              #
+#                                                         #
+#12° Activity: backup                                     #
+#                                                         #                                                       
+#=========================================================#
    
-#tar -cvzf "$2$BKP_NAME" $1
-
-function rename_folder {
-
-    if [ -e "$1" ];then
-        version=$(echo $1 | rev | cut -d "." -f1 | rev)
-        file_name=$(echo $1 | rev | cut -d "." -f2- | rev)
-        if [ "$1" == "$version" ];then
-            rename_folder "$file_name.1"
-        elif [ $version -gt 0 ];then
-            version=$(($version+1))
-            rename_folder "$file_name.$version"
-        else 
-            rename_folder "$file_name.$version.1"
-        fi
-    else
-        echo "$1"
-    fi
-}
-
-
-
-
-
+#Função para auxiliar o tratamento do nome do arquivo ou diretorio 
 function rename_file {
 	if [ -e $1 ];then
 		version=$(echo $1 | rev | cut -d "." -f1 | rev)
@@ -42,30 +26,31 @@ function rename_file {
 	fi
 }
 
+# Funcao para tratamento do nome
 function get_name {
     if [ -f "$1" ];then 
-	    var=$(echo "$1" | rev | cut -d "/" -f1 | rev)
+	var=$(echo "$1" | rev | cut -d "/" -f1 | rev)
     	FOLDER_NAME=$(rename_file "$2$var")
-	    echo $FOLDER_NAME
+	echo $FOLDER_NAME
     elif [ -d "$1" ];then
-	    var=$(echo $1 | rev | cut -d "/" -f2 | rev)
+	var=$(echo $1 | rev | cut -d "/" -f2 | rev)
     	FOLDER_NAME=$(rename_file "$2$var")
     	echo $FOLDER_NAME
     fi
 
 }
 
+#validacao de existencia
 function exist {
     version=1
     while [ -e $1"."$version ];do
         version=$(($version+1))
-   
     done
 
     echo $1"."$version
 }
 
-
+#Colocando a extensao nos arquivos zipados
 function put_extension {
     var=$(get_name $1 $2)
     version=$(echo $var | rev | cut -d "." -f1 | rev)
@@ -86,23 +71,43 @@ function put_extension {
     
 }
 
+#Valida entradas
+function valid {
+	if [ -d $1 ];then
+		echo "$1/"
+	elif [ -e $1 ];then
+		echo $1
+	else
+		echo "ERRO" 
+	fi
+}
 
 
 if [ "$1" == "-z" ];then
-    if [ 
-    var=$(get_name $2 $3)
+   	in1=$(valid $2)
+	in2=$(valid $3) 
+    var=$(get_name $in1 $in2)
+	if [ $in1 == "ERRO" ] || [ $in2 == "ERRO" ];then
+		exit 1;
+	fi
     version=$(echo $var | rev | cut -d "." -f1 | rev)
     name=$(echo $var | rev | cut -d "." -f2- | rev)
-    result=$(put_extension $2 $3)
+    result=$(put_extension $in1 $in2)
     
     tar -cvzf $result $2
     echo "$result" >> info 
     date >> info
 else
-    var=$(get_name $1 $2)
+	in1=$(valid $1)
+	in2=$(valid $2)
+	if [ "$in1" == "ERRO" ] || [ "$in2" == "ERRO" ];then
+		exit 1;
+	fi
+    var=$(get_name $in1 $in2)
 
-    cp -R $1 $var
+    cp -R $in1 $var
     echo "$var" >> info
     date >> info
 fi
+
 
